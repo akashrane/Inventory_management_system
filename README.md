@@ -1,4 +1,5 @@
 📦 Inventory Management System
+
 📝 Project Overview
 The Inventory Management System is a full-stack application designed to help warehouse managers efficiently monitor stock levels, track item locations, and manage inventory transactions in real-time. This project uses a combination of Firebase Authentication, Node.js, Express, MySQL, and Socket.IO to provide secure user management, robust API functionality, and real-time notifications.
 
