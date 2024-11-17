@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middleware/authMiddleware');
 
 // Fetch all products
-router.get('/', (req, res) => {
+router.get('/', verifyToken, (req, res) => {
     const query = 'SELECT * FROM products';
     global.db.query(query, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -20,15 +21,6 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// Add a new product
-router.post('/', (req, res) => {
-    const { product_name, description, barcode, quantity, location, supplier_id } = req.body;
-    const query = 'INSERT INTO products (product_name, description, barcode, quantity, location, supplier_id) VALUES (?, ?, ?, ?, ?, ?)';
-    global.db.query(query, [product_name, description, barcode, quantity, location, supplier_id], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ message: 'Product added successfully' });
-    });
-});
 
 // Update a product
 router.put('/:id', (req, res) => {
@@ -48,5 +40,15 @@ router.delete('/:id', (req, res) => {
         res.json({ message: 'Product deleted successfully' });
     });
 });
+
+router.post('/', verifyToken, (req, res) => {
+    const { product_name, description, barcode, quantity, location, supplier_id } = req.body;
+    const query = 'INSERT INTO products (product_name, description, barcode, quantity, location, supplier_id) VALUES (?, ?, ?, ?, ?, ?)';
+    global.db.query(query, [product_name, description, barcode, quantity, location, supplier_id], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ message: 'Product added successfully' });
+    });
+});
+
 
 module.exports = router;
