@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/authMiddleware');
+const verifyRole = require("../middleware/roleMiddleware");
+
 
 // Fetch all products
 router.get('/', verifyToken, (req, res) => {
@@ -32,23 +34,40 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// Delete a product
-router.delete('/:id', (req, res) => {
-    const query = 'DELETE FROM products WHERE product_id = ?';
-    global.db.query(query, [req.params.id], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: 'Product deleted successfully' });
-    });
-});
 
-router.post('/', verifyToken, (req, res) => {
+// Example route: Only 'manager' can add products
+router.post("/", verifyToken, verifyRole(["manager"]), (req, res) => {
     const { product_name, description, barcode, quantity, location, supplier_id } = req.body;
-    const query = 'INSERT INTO products (product_name, description, barcode, quantity, location, supplier_id) VALUES (?, ?, ?, ?, ?, ?)';
+
+    if (!product_name || !description || !barcode || !quantity || !location || !supplier_id) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const query = `
+        INSERT INTO products (product_name, description, barcode, quantity, location, supplier_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
     global.db.query(query, [product_name, description, barcode, quantity, location, supplier_id], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ message: 'Product added successfully' });
+        if (err) {
+            console.error("Database Error:", err);
+            return res.status(500).json({ error: "Failed to add product" });
+        }
+        res.status(201).json({ message: "Product added successfully" });
     });
 });
 
+// Example route: Only 'manager' can delete products
+router.delete("/:id", verifyToken, verifyRole(["manager"]), (req, res) => {
+    const productId = req.params.id;
+
+    const query = "DELETE FROM products WHERE product_id = ?";
+    global.db.query(query, [productId], (err, results) => {
+        if (err) {
+            console.error("Database Error:", err);
+            return res.status(500).json({ error: "Failed to delete product" });
+        }
+        res.status(200).json({ message: "Product deleted successfully" });
+    });
+});
 
 module.exports = router;

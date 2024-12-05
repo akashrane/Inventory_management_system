@@ -1,5 +1,8 @@
 const API_BASE_URL = "http://localhost:3001/api";
 
+let currentPage = 1;
+const rowsPerPage = 5;
+
 // Utility to get the current page
 const getCurrentPage = () => window.location.pathname.split("/").pop();
 
@@ -91,51 +94,13 @@ const handleDashboard = (token) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await response.json();
-            inventoryData = data; // Store full inventory for search and filtering
-            renderTable(data);
+            filteredData = data; 
+            renderTable(filteredData);
         } catch (err) {
             console.error(err);
             alert("Failed to fetch inventory data.");
         }
     };
-
-    // Render inventory table
-    const renderTable = (products) => {
-        let table = `
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable('product_name')">Product Name</th>
-                        <th>Description</th>
-                        <th>Barcode</th>
-                        <th>Quantity</th>
-                        <th>Location</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-        products.forEach((product) => {
-            table += `
-                <tr>
-                    <td>${product.product_name}</td>
-                    <td>${product.description}</td>
-                    <td>${product.barcode}</td>
-                    <td>${product.quantity}</td>
-                    <td>${product.location}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${product.product_id}')">Delete</button>
-                    </td>
-                </tr>
-            `;
-        });
-        table += `
-                </tbody>
-            </table>
-        `;
-        inventoryDiv.innerHTML = table;
-    };
-
     // Add new product
     if (addProductForm) {
         addProductForm.addEventListener("submit", async (e) => {
@@ -213,7 +178,6 @@ const handleDashboard = (token) => {
         });
     }
 
-    // Initial inventory fetch
     fetchInventory();
 };
 
@@ -226,3 +190,162 @@ const sortTable = (column) => {
     });
     renderTable(inventoryData);
 };
+
+
+// Decode token to get user role
+const getUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    try {
+        const decoded = jwt_decode(token); // Requires 'jwt-decode' package
+        console.log("Decoded Token:", decoded); // Debugging line
+        return decoded.role;
+    } catch (err) {
+        console.error("Error decoding token:", err);
+        return null;
+    }
+};
+
+
+// Example: Hide or disable buttons based on role
+const adjustUIBasedOnRole = () => {
+    const userRole = getUserRole(); // Decode the user's role from the JWT
+    if (!userRole) return;
+
+    // Hide "Add Product" section for employees
+    const addProductSection = document.getElementById("addProductForm");
+    const addProductText = document.querySelector("h3"); // Assuming the "Add New Product" text is in an <h3> tag
+
+    if (userRole !== "manager") {
+        if (addProductSection) addProductSection.style.display = "none";
+        if (addProductText && addProductText.innerText === "Add New Product") {
+            addProductText.style.display = "none";
+        }
+    }
+
+    // Hide "Delete" buttons in the table for employees
+    const deleteButtons = document.querySelectorAll(".delete-button");
+    deleteButtons.forEach((button) => {
+        button.style.display = "none";
+    });
+
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        logoutButton.style.display = "block";
+    }
+};
+
+// Reapply UI adjustments after rendering the table
+const renderTable = (products) => {
+    const inventoryDiv = document.getElementById("inventoryData");
+
+    // Calculate pagination
+    const totalPages = Math.ceil(products.length / rowsPerPage);
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const paginatedProducts = products.slice(startIndex, endIndex);
+
+    // Render table
+    let table = `
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Barcode</th>
+                    <th>Quantity</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    paginatedProducts.forEach((product) => {
+        table += `
+            <tr>
+                <td>${product.product_name}</td>
+                <td>${product.description}</td>
+                <td>${product.barcode}</td>
+                <td>${product.quantity}</td>
+                <td>${product.location}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm delete-button" onclick="deleteProduct('${product.product_id}')">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+    table += `
+            </tbody>
+        </table>
+    `;
+
+    // Add pagination controls
+    table += `
+        <div class="pagination">
+            ${currentPage > 1 ? `<button class="btn btn-secondary" onclick="changePage(-1)">Previous</button>` : ""}
+            Page ${currentPage} of ${totalPages}
+            ${currentPage < totalPages ? `<button class="btn btn-secondary" onclick="changePage(1)">Next</button>` : ""}
+        </div>
+    `;
+
+    inventoryDiv.innerHTML = table;
+
+    adjustUIBasedOnRole();
+};
+
+// Change page function
+const changePage = (direction) => {
+    currentPage += direction;
+    renderTable(filteredData); // Use the filtered data to maintain search functionality
+};
+
+
+// Call adjustUIBasedOnRole after DOM loads
+document.addEventListener("DOMContentLoaded", () => {
+    adjustUIBasedOnRole();
+});
+
+// Handle registration form submission
+document.addEventListener("DOMContentLoaded", () => {
+    const registerForm = document.getElementById("registerForm");
+
+    if (registerForm) {
+        registerForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const role = document.getElementById("role").value;
+
+            if (!role) {
+                document.getElementById("message").innerText = "Please select a role.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, email, password, role }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById("message").innerText = "Registration successful!";
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 2000);
+                } else {
+                    document.getElementById("message").innerText = data.error || "Registration failed!";
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById("message").innerText = "An error occurred. Please try again.";
+            }
+        });
+    }
+});
