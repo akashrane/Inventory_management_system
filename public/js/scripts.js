@@ -79,6 +79,9 @@ const handleLogout = (button) => {
 const handleDashboard = (token) => {
     const inventoryDiv = document.getElementById("inventoryData");
     const addProductForm = document.getElementById("addProductForm");
+    const searchBar = document.getElementById("searchBar");
+
+    let inventoryData = [];
 
     // Fetch and display inventory
     const fetchInventory = async () => {
@@ -88,26 +91,31 @@ const handleDashboard = (token) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await response.json();
-            displayInventory(data);
+            inventoryData = data; // Store full inventory for search and filtering
+            renderTable(data);
         } catch (err) {
             console.error(err);
             alert("Failed to fetch inventory data.");
         }
     };
 
-    const displayInventory = (data) => {
+    // Render inventory table
+    const renderTable = (products) => {
         let table = `
-            <table>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Description</th>
-                    <th>Barcode</th>
-                    <th>Quantity</th>
-                    <th>Location</th>
-                    <th>Actions</th>
-                </tr>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('product_name')">Product Name</th>
+                        <th>Description</th>
+                        <th>Barcode</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
         `;
-        data.forEach((product) => {
+        products.forEach((product) => {
             table += `
                 <tr>
                     <td>${product.product_name}</td>
@@ -116,12 +124,15 @@ const handleDashboard = (token) => {
                     <td>${product.quantity}</td>
                     <td>${product.location}</td>
                     <td>
-                        <button onclick="deleteProduct('${product.product_id}')">Delete</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${product.product_id}')">Delete</button>
                     </td>
                 </tr>
             `;
         });
-        table += "</table>";
+        table += `
+                </tbody>
+            </table>
+        `;
         inventoryDiv.innerHTML = table;
     };
 
@@ -188,6 +199,30 @@ const handleDashboard = (token) => {
         }
     };
 
+    // Search functionality
+    if (searchBar) {
+        searchBar.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase();
+            const filteredData = inventoryData.filter(
+                (product) =>
+                    product.product_name.toLowerCase().includes(query) ||
+                    product.description.toLowerCase().includes(query) ||
+                    product.barcode.toLowerCase().includes(query)
+            );
+            renderTable(filteredData);
+        });
+    }
+
     // Initial inventory fetch
     fetchInventory();
+};
+
+// Sort table function
+const sortTable = (column) => {
+    inventoryData.sort((a, b) => {
+        if (a[column] < b[column]) return -1;
+        if (a[column] > b[column]) return 1;
+        return 0;
+    });
+    renderTable(inventoryData);
 };
