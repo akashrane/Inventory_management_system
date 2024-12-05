@@ -4,62 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Dashboard</h1>
-            <button id="logoutButton">Logout</button>
-        </header>
-    
-        <div class="search-bar">
-            <input type="text" id="searchBar" placeholder="Search products..." />
+<body id="dashboard-page" class="bg-gray-100 min-h-screen">
+    <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+        <h1 class="text-2xl font-bold">Dashboard</h1>
+        <button class="logout-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md" id="logoutButton">Logout</button>
+    </header>
+    <div class="container mx-auto p-6">
+        <div class="search-bar mb-6">
+            <input type="text" id="searchBar" placeholder="Search products..." 
+                class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
-    
-        <table class="table">
-            <thead>
-            </thead>
-            <tbody id="inventoryData">
- 
-            </tbody>
-        </table>
-    
-        <form id="addProductForm">
-            <h3>Add New Product</h3>
-            <div class="form-group">
-                <label for="productName">Product Name</label>
-                <input type="text" id="productName" required />
+
+         <!--Inventory Table -->
+        <div class="overflow-x-auto mb-6">
+            <table class="table-auto w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
+                <thead class="bg-gray-800 text-white">
+                </thead>
+                <tbody id="inventoryData" class="text-gray-700">
+                </tbody>
+            </table>
+        </div>
+
+        <form id="addProductForm" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Add New Product</h3>
+            <div class="form-group mb-4">
+                <label for="productName" class="block text-sm font-medium text-gray-700">Product Name</label>
+                <input type="text" id="productName" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" id="description" required />
+            <div class="form-group mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <input type="text" id="description" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <div class="form-group">
-                <label for="barcode">Barcode</label>
-                <input type="text" id="barcode"/>
+            <div class="form-group mb-4">
+                <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
+                <input type="text" id="barcode" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <div class="form-group">
-                <label for="quantity">Quantity</label>
-                <input type="number" id="quantity" required />
+            <div class="form-group mb-4">
+                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                <input type="number" id="quantity" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" id="location" required />
+            <div class="form-group mb-4">
+                <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                <input type="text" id="location" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <div class="form-group">
-                <label for="supplierId">Supplier ID</label>
-                <input type="text" id="supplierId" required />
+            <div class="form-group mb-4">
+                <label for="supplierId" class="block text-sm font-medium text-gray-700">Supplier ID</label>
+                <input type="text" id="supplierId" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             </div>
-            <button type="submit">Add Product</button>
+            <button type="submit" 
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-bold">Add Product</button>
         </form>
     </div>
     
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-
     <script src="./js/scripts.js"></script>
 </body>
 </html>
