@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Dashboard</h1>
+        <button id="logoutButton">Logout</button>
+
+        <h2>Inventory</h2>
+        <div id="inventoryData"></div>
+
+        <h2>Add New Product</h2>
+        <form id="addProductForm">
+            <input type="text" id="productName" placeholder="Product Name" required>
+            <input type="text" id="description" placeholder="Description" required>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+            <input type="text" id="location" placeholder="Location" required>
+            <select id="supplierId" required>
+                <option value="">Select Supplier</option>
+                <option value="1">Supplier A</option>
+                <option value="2">Supplier B</option>
+            </select>            
+            <input type="number" id="barcode" placeholder="barcode" required>
+            <button type="submit">Add Product</button>
+        </form>
+        <p id="productMessage"></p>
+    </div>
+    <script src="./js/scripts.js"></script>
+</body>
+</html>
