@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <!-- Tailwind CSS -->
+    <script type="module">
+        import { initializeLoginForm } from './js/auth.js';
+        document.addEventListener("DOMContentLoaded", initializeLoginForm);
+    </script>    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
@@ -25,6 +29,6 @@
         <p id="loginMessage" class="text-center mt-4 text-red-500"></p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    <script src="./js/scripts.js"></script>
+    
 </body>
 </html>
