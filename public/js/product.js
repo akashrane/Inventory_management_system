@@ -84,6 +84,8 @@ export const initializeProducts = async () => {
 
     // Wrap delete product function
     window.deleteProduct = (id) => handleDeleteProduct(id, token);
+
+    document.getElementById("logoutButton").addEventListener("click", handleLogout);
 };
 
 const renderTable = (products) => {
