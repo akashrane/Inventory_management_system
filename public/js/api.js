@@ -17,8 +17,13 @@ export const fetchAPI = async (url, options = {}) => {
 
 export const fetchInventory = () => fetchAPI("/products");
 
+export const fetchTransactions = () => fetchAPI("/transactions");
+
 export const addProduct = (productData) =>
     fetchAPI("/products", { method: "POST", body: JSON.stringify(productData) });
 
 export const deleteProduct = (productId) =>
     fetchAPI(`/products/${productId}`, { method: "DELETE" });
+
+// export const recordTransaction = (productId) =>
+//     fetchAPI(`/transaction/`, { method: "POST", body: JSON.stringify(productData) });

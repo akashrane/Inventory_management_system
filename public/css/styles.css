@@ -6,6 +6,40 @@ body {
     box-sizing: border-box;
 }
 
+nav{
+    display: flex;
+    padding: 20px;
+    position: relative;
+    align-items: center;         
+    justify-content: space-between;
+}
+
+nav .logo {
+    font-size: 23px;             /* Logo font size */
+    font-weight: bold;           /* Make the logo text bold */
+}
+
+nav ul {
+    list-style: none; 
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  nav ul li {
+    margin-right: 20px; /* Add space between menu items */
+  }
+  
+  nav ul li a {
+    text-decoration: none; /* Remove underline from links */
+    color: #000;           /* Set text color */
+    font-size: 16px;       /* Set font size */
+  }
+  
+  nav ul li a:hover {
+    color: #007BFF; /* Change color on hover */
+  }
+
 /* Shared Card Style */
 .card {
     background-color: #fff;
@@ -235,4 +269,67 @@ button:hover {
         width: 100%;
         margin-bottom: 15px;
     }
+}
+
+/* Toast Container */
+#toastContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+}
+
+/* Toast Notification */
+#toastContainer div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: white; /* Clean white background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+    border: 1px solid #e5e7eb; /* Light gray border for contrast */
+    transition: opacity 0.5s ease, transform 0.3s ease;
+    color: #111827; /* Dark text color */
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Toast Icon (Font Awesome Green Check) */
+#toastContainer div .fa-circle-check {
+    font-size: 1.5rem;
+    color: #22c55e; /* Clean green color for success icon */
+    margin-right: 0.8rem;
+}
+
+/* Toast Message */
+#toastContainer div .toast-message {
+    flex: 1; /* Take up the available space */
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Close Button */
+#toastContainer div button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #6b7280; /* Gray color for close button */
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+#toastContainer div button:hover {
+    opacity: 1;
+}
+
+/* Exit Animation */
+#toastContainer div.opacity-0 {
+    transform: translateY(50px);
+    opacity: 0;
 }
