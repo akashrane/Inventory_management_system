@@ -11,13 +11,28 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            fetch("navbar.html")
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("navbar").innerHTML = data;
-                });
+          fetch("navbar.html")
+            .then(response => response.text())
+            .then(data => {
+              document.getElementById("navbar").innerHTML = data;
+    
+              // Highlight the active link
+              const currentPage = window.location.pathname.split("/").pop(); // Get the current file name
+              const links = document.querySelectorAll(".menu a");
+    
+              links.forEach(link => {
+                if (link.getAttribute("href") === currentPage) {
+                  link.classList.add("active");
+                }
+              });
+    
+              // Explicitly initialize the navbar after it's loaded
+              import('./js/navbar.js').then(({ initializeNavbar }) => {
+                initializeNavbar();
+              });
+            });
         });
-    </script>
+      </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
@@ -28,71 +43,102 @@
         <h1 class="text-2xl font-bold">Products</h1>
     </header>
     <div class="container mx-auto p-6">
-        <div class="search-bar mb-6 flex justify-between items-center">
+        <div class="search-bar mb-3 flex justify-between items-center">
             <input type="text" id="searchBar" placeholder="Search products..."
-                class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                class="w-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <button id="showFormBtn"
                 class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">Add Product</button>
         </div>
 
-        <!--Inventory Table -->
+        <!-- Inventory Table -->
         <div class="overflow-x-auto mb-6">
-            <table class="table-auto w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
+            <table class="table-fixed border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
                 <thead class="bg-gray-800 text-white">
                     <tr>
-                        <th>Product</th>
-                        <th>Description</th>
-                        <th align="right">Barcode</th>
-                        <th>Quantity</th>
-                        <th>Location</th>
+                        <th data-sort="product_name" class="cursor-pointer">Product</th>
+                        <th data-sort="description" class="cursor-pointer">Description</th>
+                        <th data-sort="barcode" class="cursor-pointer">Barcode</th>
+                        <th data-sort="quantity" class="cursor-pointer">Quantity</th>
+                        <th data-sort="location" class="cursor-pointer">Location</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="inventoryData" class="text-gray-700">
-                </tbody>
+                <tbody id="inventoryData" class="text-gray-700"></tbody>
             </table>
+
+            <!-- Pagination Controls -->
+            <div class="flex justify-between items-center mt-4">
+                <div>
+                    <label for="rowsPerPage" class="text-sm font-medium text-gray-700">Rows per page:</label>
+                    <select id="rowsPerPage" class="ml-2 px-2 py-1 border border-gray-300 rounded-md shadow-sm">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="prevPage" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"><i
+                            class="fa-solid fa-backward"></i></button>
+                    <span id="pageInfo" class="text-sm font-medium text-gray-700 my-2">Page 1 of 1</span>
+                    <button id="nextPage" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"><i
+                            class="fa-solid fa-forward"></i></button>
+                </div>
+            </div>
         </div>
 
         <!-- Modal for Add Product Form -->
-        <div id="addProductModal" class="fixed inset-0 hidden bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+        <div id="addProductModal"
+            class="fixed inset-0 hidden bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-                <h3 class="text-lg font-bold text-gray-800 mb-4">Add New Product</h3>
+                <!-- Modal Title -->
+                <h3 id="modalTitle" class="text-lg font-bold text-gray-800 mb-4">Add New Product</h3>
                 <form id="addProductForm">
+                    <!-- Product Name -->
                     <div class="form-group mb-4">
                         <label for="productName" class="block text-sm font-medium text-gray-700">Product Name</label>
                         <input type="text" id="productName" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <!-- Description -->
                     <div class="form-group mb-4">
                         <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                         <input type="text" id="description" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <!-- Barcode -->
                     <div class="form-group mb-4">
                         <label for="barcode" class="block text-sm font-medium text-gray-700">Barcode</label>
                         <input type="text" id="barcode"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <!-- Quantity -->
                     <div class="form-group mb-4">
                         <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
                         <input type="number" id="quantity" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <!-- Location -->
                     <div class="form-group mb-4">
                         <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                         <input type="text" id="location" required
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                    <!-- Supplier Dropdown -->
                     <div class="form-group mb-4">
-                        <label for="supplierId" class="block text-sm font-medium text-gray-700">Supplier ID</label>
-                        <input type="text" id="supplierId" required
+                        <label for="supplierDropdown" class="block text-sm font-medium text-gray-700">Select Supplier</label>
+                        <select id="supplierDropdown"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="">-- Select Supplier --</option>
+                        </select>
                     </div>
+                    <!-- Action Buttons -->
                     <div class="flex justify-end space-x-4">
-                        <button type="button" id="closeModalBtn" class="px-4 py-2 bg-gray-300 rounded-md">Cancel</button>
-                        <button type="submit"
-                            class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">Add
-                            Product</button>
+                        <button type="button" id="closeModalBtn"
+                            class="px-4 py-2 bg-gray-300 rounded-md">Cancel</button>
+                        <button type="submit" id="modalSubmitButton"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">Add Product</button>
                     </div>
                 </form>
             </div>

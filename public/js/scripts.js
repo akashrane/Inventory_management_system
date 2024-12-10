@@ -3,6 +3,7 @@ let currentPage = 1;
 const rowsPerPage = 5;
 let inventoryData = [];
 
+document.getElementById("logoutButton").addEventListener("click", handleLogout);
 // Utility to get the current page name
 const getCurrentPage = () => window.location.pathname.split("/").pop();
 

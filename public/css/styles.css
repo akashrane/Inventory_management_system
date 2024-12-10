@@ -6,7 +6,7 @@ body {
     box-sizing: border-box;
 }
 
-nav{
+nav {
     display: flex;
     padding: 20px;
     position: relative;
@@ -24,21 +24,83 @@ nav ul {
     padding: 0;
     margin: 0;
     display: flex;
-  }
+}
   
-  nav ul li {
+nav ul li {
     margin-right: 20px; /* Add space between menu items */
-  }
+}
   
-  nav ul li a {
+nav ul li a {
     text-decoration: none; /* Remove underline from links */
     color: #000;           /* Set text color */
     font-size: 16px;       /* Set font size */
-  }
+}
   
-  nav ul li a:hover {
+nav ul li a:hover {
     color: #007BFF; /* Change color on hover */
-  }
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown button span{
+    font-weight: 600;
+}
+
+.dropdown button i {
+    font-size: 0.8rem;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+.dropdown-content button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    background-color: white;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content button:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-content button.text-red-600:hover {
+    background-color: #ffe6e6;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
 /* Shared Card Style */
 .card {
@@ -181,15 +243,10 @@ button:hover {
 }
 
 #dashboard-page table td button {
-    background-color: #dc3545;
     color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 0.9rem;
-}
-
-#dashboard-page table td button:hover {
-    background-color: #c82333;
 }
 
 #dashboard-page form {
@@ -332,4 +389,20 @@ button:hover {
 #toastContainer div.opacity-0 {
     transform: translateY(50px);
     opacity: 0;
+}
+
+thead th {
+    cursor: pointer;
+}
+
+/* Disabled Pagination Buttons */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Active Sort Column Highlight (Optional) */
+thead th[data-sort]:hover {
+    background-color: #e5e7eb;
+    color: #111827;
 }
