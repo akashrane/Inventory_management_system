@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script type="module">
-        import { initializeDashboard } from './js/dashboard.js';
-        document.addEventListener("DOMContentLoaded", initializeDashboard);
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-      // Fetch and inject the navbar
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <script type="module">
+    import { initializeDashboard } from './js/dashboard.js';
+    document.addEventListener("DOMContentLoaded", initializeDashboard);
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
       fetch("navbar.html")
         .then(response => response.text())
         .then(data => {
@@ -26,36 +26,43 @@
               link.classList.add("active");
             }
           });
+
+          // Explicitly initialize the navbar after it's loaded
+          import('./js/navbar.js').then(({ initializeNavbar }) => {
+            initializeNavbar();
+          });
         });
     });
-    </script>
+  </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./css/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./css/styles.css">
 </head>
+
 <body id="dashboard-page" class="bg-gray-100 min-h-screen">
-    <div id="navbar"></div>
-    <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="text-2xl font-bold">Dashboard</h1>
-    </header>
-    
-    <div class="overflow-x-auto mb-6">
-        <table class="table-auto w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
-            <thead class="bg-gray-800 text-white">
-              <tr>
-                <th colspan="4" class="text-base"> Transactions </th>
-              </tr>
-              <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Time</th>
-                <th>Note</th>
-              </tr>
-            </thead>
-            <tbody id="transactionData" class="text-gray-700">
-            </tbody>
-        </table>
-    </div>
+  <div id="navbar"></div>
+  <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+    <h1 class="text-2xl font-bold">Dashboard</h1>
+  </header>
+
+  <div class="overflow-x-auto mb-6">
+    <table class="table-auto w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th colspan="4" class="text-base"> Transactions </th>
+        </tr>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Time</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody id="transactionData" class="text-gray-700">
+      </tbody>
+    </table>
+  </div>
 
 </body>
+
 </html>
