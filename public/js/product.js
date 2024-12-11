@@ -166,7 +166,7 @@ const generateRowHTML = ({ product_id, product_name, description, barcode, quant
         <td>
             <div class="flex items-center space-x-2">
                 <button 
-                    onclick="adjustQuantity(this, -1)" 
+                    onclick="adjustQuantity(this, -1,'remove')" 
                     data-product-id="${product_id}"
                     data-product-name="${product_name}"
                     data-description="${description}"
@@ -179,7 +179,7 @@ const generateRowHTML = ({ product_id, product_name, description, barcode, quant
                 </button>
                 <span id="quantity-${product_id}" class="text-gray-800">${quantity}</span>
                 <button 
-                    onclick="adjustQuantity(this, 1)" 
+                    onclick="adjustQuantity(this, 1,'add')" 
                     data-product-id="${product_id}"
                     data-product-name="${product_name}"
                     data-description="${description}"
@@ -220,8 +220,10 @@ const generateRowHTML = ({ product_id, product_name, description, barcode, quant
 `;
 
 // Adjust Quantity
-export const adjustQuantity = async (buttonElement, adjustment) => {
+export const adjustQuantity = async (buttonElement, adjustment, action) => {
     const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    const userdata = JSON.parse(user);
     if (!token) {
         alert("You are not logged in!");
         window.location.href = "login.html";
@@ -270,6 +272,9 @@ export const adjustQuantity = async (buttonElement, adjustment) => {
             buttons.forEach((btn) => btn.setAttribute("data-quantity", newQuantity));
 
             showToast(`Quantity updated to ${newQuantity} for "${productName}"!`);
+            console.log(productId,userdata.user_id, action, newQuantity);
+            await createTransaction(productId,userdata.user_id, action, newQuantity);
+
         } else {
             alert("Failed to update quantity.");
         }
@@ -377,8 +382,47 @@ export const handleUpdateProduct = async (productId) => {
     } catch (error) {
         console.error("Update Product Error:", error);
         alert(`Error updating product: ${error.message}`);
-    }
-};
+    }};
+
+    const createTransaction = async (productId, userId, changeType, quantity) => {
+        try {
+          // Set headers
+          const myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+      
+          // Create the request body
+          const raw = JSON.stringify({
+            product_id: productId,
+            user_id: userId,
+            change_type: changeType,
+            quantity: quantity,
+          });
+      
+          // Set request options
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+          };
+      
+          // Make the API call
+          const response = await fetch(
+            "http://localhost:3001/api/transactions",
+            requestOptions
+          );
+      
+          // Handle the response
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+          }
+      
+          const result = await response.json();
+          console.log("Transaction successful:", result);
+        } catch (error) {
+          console.error("Error creating transaction:", error);
+        }
+      };
 
 // Handle Delete Product
 export const handleDeleteProduct = async (productId, token) => {

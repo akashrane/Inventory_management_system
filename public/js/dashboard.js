@@ -11,10 +11,8 @@ export const initializeDashboard = async () => {
     }
 
     try {
-        // Fetch product analytics and update the dashboard
         await fetchAndRenderAnalytics();
 
-        // Attach logout event
         document.getElementById("logoutButton").addEventListener("click", handleLogout);
     } catch (error) {
         console.error("Error initializing dashboard:", error);
@@ -22,7 +20,6 @@ export const initializeDashboard = async () => {
     }
 };
 
-// Fetch and render analytics
 const fetchAndRenderAnalytics = async () => {
     try {
         // Fetch analytics data for total products and quantities
