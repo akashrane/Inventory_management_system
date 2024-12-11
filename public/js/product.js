@@ -42,6 +42,7 @@ export const initializeProducts = async () => {
     }
 };
 
+
 // Helper function to set up search, sorting, and pagination event listeners
 const setupEventListeners = (inventory) => {
     // Search functionality

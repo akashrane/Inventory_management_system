@@ -1,7 +1,7 @@
+// Base API URL
 export const API_BASE_URL = "http://localhost:3001/api";
 
-import {addProduct, deleteProduct, fetchTransactions} from './api.js';
-
+// Initialize the dashboard
 export const initializeDashboard = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -11,68 +11,87 @@ export const initializeDashboard = async () => {
     }
 
     try {
-        const transaction = await fetchTransactions();
-        renderTable(transaction);
+        // Fetch product analytics and update the dashboard
+        await fetchAndRenderAnalytics();
+
+        // Attach logout event
+        document.getElementById("logoutButton").addEventListener("click", handleLogout);
     } catch (error) {
-        console.error("Failed to fetch inventory:", error);
-        alert("Error loading dashboard data.");
+        console.error("Error initializing dashboard:", error);
+        alert("Failed to load dashboard data.");
     }
-
-    document.getElementById("logoutButton").addEventListener("click", handleLogout);
 };
 
-const renderTable = (products) => {
-    const transactionDiv = document.getElementById("transactionData");
-    const tableHTML = products.length
-        ? products.map((p) => generateRowHTML(p)).join("")
-        : "<tr><td colspan='6'>No transaction available</td></tr>";
-    transactionDiv.innerHTML = tableHTML;
+// Fetch and render analytics
+const fetchAndRenderAnalytics = async () => {
+    try {
+        // Fetch analytics data for total products and quantities
+        const analyticsResponse = await fetch(`${API_BASE_URL}/analytics/quantities`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+
+        if (!analyticsResponse.ok) {
+            throw new Error("Failed to fetch analytics data");
+        }
+
+        const analyticsData = await analyticsResponse.json();
+
+        // Update total products and total quantities
+        document.getElementById('totalProducts').textContent = analyticsData.totalProducts;
+        document.getElementById('totalQuantity').textContent = analyticsData.totalQuantity;
+
+        // Fetch products data for chart
+        const productsResponse = await fetch(`${API_BASE_URL}/products`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+
+        if (!productsResponse.ok) {
+            throw new Error("Failed to fetch product data");
+        }
+
+        const productsData = await productsResponse.json();
+
+        // Render the chart
+        renderProductQuantityChart(productsData);
+    } catch (error) {
+        console.error("Error fetching and rendering analytics:", error);
+        alert("Failed to load dashboard data.");
+    }
 };
 
-const generateRowHTML = ({ product_id, quantity, timestamp, notes }) => `
-    <tr>
-        <td>${product_id}</td>
-        <td>${quantity}</td>
-        <td>${timestamp}</td>
-        <td>${notes}</td>
-    </tr>
-    </tbody>
-`;
+// Render product quantities chart
+const renderProductQuantityChart = (products) => {
+    const ctx = document.getElementById('productChart').getContext('2d');
+    const labels = products.map(product => product.product_name);
+    const quantities = products.map(product => product.quantity);
 
-// const handleTransaction = async (productId, changeType, token) => {
-//     const transactionDetail = {
-//         product_id: null,
-//         user_id: null,
-//         changeType: changeType.value,
-//         quantity: parseInt(10), // Ensure numeric value
-//         notes: changeType.value,
-//     };
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Product Quantities',
+                data: quantities,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'top' },
+            },
+        },
+    });
+};
 
-//     console.log("Transaction Data:", transactionDetail); // Debugging log
-
-//     try {
-//         const response = await fetch(`${API_BASE_URL}/transactions`, {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-//             body: JSON.stringify(transactionDetail),
-//         });
-
-//         if (response.ok) {
-//             alert("Transaction recorded successfully!");
-//             const updatedInventory = await fetchInventory();
-//             renderTable(updatedInventory);
-//         } else {
-//             const error = await response.json();
-//             alert(`Failed to record transaction: ${error.error}`);
-//         }
-//     } catch (error) {
-//         console.error("Trasaction recording Error:", error);
-//         alert("Error recording Transaction product.");
-//     }
-// };
-
+// Handle logout
 const handleLogout = () => {
     localStorage.removeItem("token");
     alert("Logged out successfully!");
     window.location.href = "login.html";
 };
+
+// Initialize the dashboard when the page loads
+document.addEventListener('DOMContentLoaded', initializeDashboard);
