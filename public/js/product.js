@@ -3,9 +3,9 @@ export const API_BASE_URL = "http://localhost:3001/api";
 
 let currentPage = 1;
 let rowsPerPage = 5;
-let sortOrder = "asc"; // Default sort order
-let sortColumn = "product_name"; // Default sort column
-let filteredData = []; // Holds filtered and sorted data
+let sortOrder = "asc"; 
+let sortColumn = "product_name"; 
+let filteredData = []; 
 
 export const initializeProducts = async () => {
     const token = localStorage.getItem("token");
@@ -41,7 +41,6 @@ export const initializeProducts = async () => {
         alert("Error loading dashboard data.");
     }
 };
-
 
 // Helper function to set up search, sorting, and pagination event listeners
 const setupEventListeners = (inventory) => {
