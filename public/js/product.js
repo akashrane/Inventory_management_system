@@ -484,7 +484,6 @@ const populateSupplierDropdown = (suppliers) => {
     });
 };
 
-// Toast notification
 const showToast = (message) => {
     const toastContainer = document.getElementById("toastContainer");
     const toast = document.createElement("div");
