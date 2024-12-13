@@ -17,7 +17,7 @@
 
 <body>
   <nav class="navbar">
-    <div class="logo">I M S</div>
+    <div class="logo text-base p-2 text-gray-950"><a href="/public/dashboard.html">I M S </a></div>
     <ul>
       <li><a href="dashboard.html" id="home-link">Dashboard</a></li>
       <li><a href="products.html" id="products-link">Products</a></li>
@@ -28,10 +28,15 @@
         <i class="fa-solid fa-chevron-down"></i>
       </button>
       <div class="dropdown-content">
-        <button id="myProfileButton"><i class="fa-solid fa-user mr-2"></i> My Profile</button>
-        <button id="logoutButton" class="text-red-600"><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Log
-          Out</button>
-      </div>
+        <button id="myProfileButton" class="dropdown-item">
+            <span class="text">My Profile</span>
+            <i class="fa-solid fa-user"></i>
+        </button>
+        <button id="logoutButton" class="dropdown-item">
+            <span class="text text-red-600">Log Out</span>
+            <i class="fa-solid fa-arrow-right-from-bracket text-red-600"></i>
+        </button>
+    </div>    
     </div>
   </nav>
 </body>

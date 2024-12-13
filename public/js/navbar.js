@@ -5,11 +5,13 @@ import {addProduct, deleteProduct, fetchTransactions} from './api.js';
 export const initializeNavbar = () => {
 
     const usernameDisplay = document.getElementById("usernameDisplay");
-    const username = localStorage.getItem("username");
+    const userData = localStorage.getItem("user");
 
-    if (username) {
-        usernameDisplay.innerText = username;
-    }
+    const user = userData ? JSON.parse(userData) : null;
+
+    const username = user ? user.username : "User";
+
+    usernameDisplay.innerText = username;
 
     // My Profile button
     document.getElementById("myProfileButton").addEventListener("click", () => {

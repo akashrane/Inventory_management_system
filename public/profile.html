@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script type="module">
+        import { initializeProfile } from './js/profile.js';
+        document.addEventListener("DOMContentLoaded", initializeProfile);
+      </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("navbar").innerHTML = data;
+
+                    const currentPage = window.location.pathname.split("/").pop();
+                    const links = document.querySelectorAll(".menu a");
+
+                    links.forEach(link => {
+                        if (link.getAttribute("href") === currentPage) {
+                            link.classList.add("active");
+                        }
+                    });
+
+                    import('./js/navbar.js').then(({ initializeNavbar }) => {
+                        initializeNavbar();
+                    });
+                });
+        });
+    </script>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div class="flex justify-center mt-10">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl w-full">
+            <!-- Header Section -->
+            <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 h-40 relative">
+                <div class="absolute inset-x-0 top-16 flex justify-center">
+                    <div class="relative w-32 h-32 bg-white rounded-full shadow-lg flex items-center justify-center">
+                        <i class="fa-solid fa-user text-gray-500 text-6xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Details Section -->
+            <div class="text-center mt-20 px-6">
+                <h2 class="text-2xl font-semibold text-gray-900" id="profileUsername"></h2>
+                <p class="text-gray-500" id="profileRole"></p>
+                <div class="mt-4 flex justify-center space-x-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md ">Edit</button>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="px-6 py-4">
+                <h3 class="text-lg font-semibold text-gray-800">About</h3>
+                <p class="text-gray-600 mt-2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum. Cras venenatis euismod malesuada.
+                </p>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="border-t border-gray-200 grid grid-cols-3 text-center">
+                <div class="py-4">
+                    <h4 class="text-xl font-bold text-gray-900">3K</h4>
+                    <p class="text-gray-500">Products</p>
+                </div>
+                <div class="py-4">
+                    <h4 class="text-xl font-bold text-gray-900">30.5M</h4>
+                    <p class="text-gray-500">Quantities</p>
+                </div>
+                <div class="py-4">
+                    <h4 class="text-xl font-bold text-gray-900">90.6M</h4>
+                    <p class="text-gray-500">Suppliers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
