@@ -348,40 +348,56 @@ export const handleAddProduct = async (e, token) => {
     }
 };
 
-// Handle Update Product
+
 export const handleUpdateProduct = async (productId) => {
     const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    const userdata = JSON.parse(user); // Parse user data to get user_id
+
     const productData = {
         product_name: document.getElementById("productName").value,
         description: document.getElementById("description").value,
         barcode: document.getElementById("barcode").value,
-        quantity: document.getElementById("quantity").value,
+        quantity: parseInt(document.getElementById("quantity").value, 10), // Ensure quantity is an integer
         location: document.getElementById("location").value,
         supplier_id: document.getElementById("supplierDropdown").value,
     };
 
     try {
+        // API call to update the product
         const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify(productData),
         });
 
         if (response.ok) {
-            const inventory = await fetchInventory();
+            const inventory = await fetchInventory(); // Refresh inventory after update
             filteredData = inventory;
             updateTableWithPagination(filteredData);
 
             const modal = document.getElementById("addProductModal");
             modal.classList.add("hidden");
             showToast(`Product "${productData.product_name}" updated successfully!`);
+
+            // Create a transaction for the update
+            await createTransaction(
+                productId,
+                userdata.user_id, 
+                "update", 
+                productData.quantity 
+            );
         } else {
             alert("Failed to update product.");
         }
     } catch (error) {
         console.error("Update Product Error:", error);
         alert(`Error updating product: ${error.message}`);
-    }};
+    }
+};
 
     const createTransaction = async (productId, userId, changeType, quantity) => {
         try {

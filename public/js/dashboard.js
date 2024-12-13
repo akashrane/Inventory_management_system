@@ -1,6 +1,7 @@
 // Base API URL
 export const API_BASE_URL = "http://localhost:3001/api";
-
+import { fetchInventory } from './api.js';
+let productMap = {};
 
 // Initialize the dashboard
 export const initializeDashboard = async () => {
@@ -12,6 +13,7 @@ export const initializeDashboard = async () => {
     }
 
     try {
+        await initializeProductMap();
         await fetchAndRenderAnalytics();
         const transactions = await fetchTransactions(); 
         renderTransactionsTable(transactions);
@@ -123,6 +125,21 @@ const fetchTransactions = async () => {
     }
 };
 
+ // To store product_id -> product_name mapping
+
+const initializeProductMap = async () => {
+    try {
+        const inventory = await fetchInventory(); // Function already exists in `product.js`
+        productMap = inventory.reduce((map, product) => {
+            map[product.product_id] = product.product_name; // Map product_id to product_name
+            return map;
+        }, {});
+    } catch (error) {
+        console.error("Error initializing product map:", error);
+        alert("Failed to load product data.");
+    }
+};
+
 const renderTransactionsTable = (transactions) => {
     const rowsPerPage = 10; // Number of rows per page
     let currentPage = 1; // Initial page
@@ -163,10 +180,11 @@ const renderTransactionsTable = (transactions) => {
         `;
     
         paginatedTransactions.forEach(transaction => {
+            const productName = productMap[transaction.product_id] || "Unknown Product";
             tableHTML += `
                 <tr>
                     <td>${transaction.transaction_id}</td>
-                    <td>${transaction.product_id}</td>
+                    <td>${productName}</td>
                     <td>${transaction.quantity}</td>
                     <td>${transaction.change_type}</td>
                     <td>${transaction.timestamp}</td>
