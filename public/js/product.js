@@ -192,7 +192,7 @@ const generateRowHTML = ({ product_id, product_name, description, barcode, quant
             </div>
         </td>
         <td>${location}</td>
-        <td class="flex space-x-2">
+        <td class="space-x-3">
             <button 
                 class="p-2 rounded bg-blue-600 hover:bg-blue-800 text-white" 
                 data-product-id="${product_id}" 
