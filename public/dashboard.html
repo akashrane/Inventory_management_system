@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <script type="module">import { initializeDashboard } from './js/dashboard.js';
-  document.addEventListener("DOMContentLoaded", initializeDashboard);
-  </script>
+  <!-- Importing Scripts -->
   <script type="module">
     import { initializeDashboard } from './js/dashboard.js';
     document.addEventListener("DOMContentLoaded", initializeDashboard);
@@ -37,6 +36,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./css/styles.css">
 </head>
+
 <body id="dashboard-page" class="bg-gray-100 min-h-screen">
   <!-- Navbar -->
   <div id="navbar"></div>
@@ -48,77 +48,72 @@
 
   <!-- Main Content -->
   <div class="container mx-auto p-6">
-    <!-- Summary Section -->
-    <h2 class="text-xl font-semibold mb-4">Summary</h2>
-    <div id="summary" class="grid grid-cols-2 gap-4 mb-6">
-      <div class="p-4 bg-white rounded shadow-md">
-        <h3 class="text-lg font-bold">Total Products</h3>
-        <p id="totalProducts" class="text-2xl text-blue-500">0</p>
+
+    <div class="p-4 bg-white rounded shadow-md mb-8">
+      <h3 class="text-lg font-bold mb-4">Summary</h3>
+      <div id="summary" class="grid grid-cols-2 gap-4">
+        <div class="p-4 bg-gray-100 rounded">
+          <h4 class="text-sm font-bold">Total Products</h4>
+          <p id="totalProducts" class="text-xl text-blue-500">0</p>
+        </div>
+        <div class="p-4 bg-gray-100 rounded">
+          <h4 class="text-sm font-bold">Total Quantity</h4>
+          <p id="totalQuantity" class="text-xl text-green-500">0</p>
+        </div>
       </div>
-      <div class="p-4 bg-white rounded shadow-md">
-        <h3 class="text-lg font-bold">Total Quantity</h3>
-        <p id="totalQuantity" class="text-2xl text-green-500">0</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow-md mb-8">
+      <h3 class="text-lg font-bold mb-4">Low Stock Alerts</h3>
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-800 text-white">
+          <tr>
+            <th class="px-4 py-2 border border-gray-300">Product Name</th>
+            <th class="px-4 py-2 border border-gray-300">Quantity</th>
+            <th class="px-4 py-2 border border-gray-300">Location</th>
+          </tr>
+        </thead>
+        <tbody id="lowStockTableBody" class="text-gray-700">
+          <!-- Dynamic Content -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pie Charts Section -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <!-- Stock Distribution by Location -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Stock Distribution by Location</h3>
+        <canvas id="stockDistributionChart" class="rounded"></canvas>
+      </div>
+
+      <!-- Transaction Breakdown -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Transaction Breakdown</h3>
+        <canvas id="transactionBreakdownChart" class="bg-white rounded"></canvas>
       </div>
     </div>
 
-    <!-- Low Stock Alerts Section -->
-    <div id="lowStockAlerts" class="bg-white p-6 rounded-lg shadow-md mt-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Low Stock Alerts</h3>
-      <table class="table-auto w-full border-collapse border border-gray-300">
-          <thead class="bg-gray-800 text-white">
-              <tr>
-                  <th class="px-4 py-2 border border-gray-300">Product Name</th>
-                  <th class="px-4 py-2 border border-gray-300">Quantity</th>
-                  <th class="px-4 py-2 border border-gray-300">Location</th>
-              </tr>
-          </thead>
+    <!-- Top Selling Products and Daily Sales Trends Section -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <!-- Top Selling Products -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Top-Selling Products</h3>
+        <canvas id="topSellingChart" class="bg-white rounded"></canvas>
+      </div>
 
-          <tbody id="lowStockTableBody" class="text-gray-700">
-              <!-- Dynamic Content -->
-          </tbody>
-      </table>
-  </div>
-
-  <div id="stockDistribution" class="bg-white p-6 rounded-lg shadow-md mt-6">
-    <h3 class="text-lg font-bold text-gray-800 mb-4">Stock Distribution by Location</h3>
-    <canvas id="stockDistributionChart" class="bg-white rounded shadow-md"></canvas>
-</div>
-
-    <!-- Top Selling Products Section -->
-    <div class="container mx-auto p-6">
-      <h2 class="text-xl font-semibold mb-4">Top-Selling Products</h2>
-      <canvas id="topSellingChart" class="bg-white rounded shadow-md"></canvas>
-  </div>
-
-  <!-- dailySalesTrends -->
-  <div id="dailySalesTrends" class="bg-white p-6 rounded-lg shadow-md mt-6">
-    <h3 class="text-lg font-bold text-gray-800 mb-4">Daily Sales Trends</h3>
-    <canvas id="dailySalesChart" class="bg-white rounded shadow-md"></canvas>
-</div>
+      <!-- Daily Sales Trends -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Daily Sales Trends</h3>
+        <canvas id="dailySalesChart" class="bg-white rounded"></canvas>
+      </div>
+    </div>
 
     <!-- Product Quantities Section -->
-    <h2 class="text-xl font-semibold mb-4">Product Quantities</h2>
-    <div class="bg-white p-4 rounded shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Product Quantities</h3>
       <canvas id="productChart"></canvas>
     </div>
-
-    <table id="transactionsTable" class="w-full">
-      <tbody id="transactionsTableBody">
-        <div id="noTransactions" style="display: none;">No transactions available</div>
-
-        <!-- Transaction Breakdown Section -->
-        <div class="container mx-auto p-6">
-          <h2 class="text-xl font-semibold mb-4">Transaction Breakdown</h2>
-          <canvas id="transactionBreakdownChart" class="bg-white rounded shadow-md"></canvas>
-      </div>
-      
-
-          <!-- Transactions will be dynamically populated here -->
-      </tbody>
-  </table>
-  <div id="paginationControls" class="pagination-controls mt-4"></div>
-
-  
-
+  </div>
 </body>
+
 </html>

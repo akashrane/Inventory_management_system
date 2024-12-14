@@ -32,6 +32,11 @@ nav ul {
     padding: 0;
     margin: 0;
     display: flex;
+    cursor: pointer;
+}
+
+.menubar{
+    cursor: pointer;
 }
   
 nav ul li {
@@ -142,36 +147,36 @@ nav ul li a:hover {
 /* Page-Specific Styles */
 
 /* Login Page */
-#login-page {
+/* #login-page {
     background: linear-gradient(to right, #74ebd5, #acb6e5);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
-#login-page .form-control {
+/* #login-page .form-control {
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ddd;
     border-radius: 5px;
-}
+} */
 
-#login-page button {
+/* #login-page button {
     background-color: #007bff;
     color: #fff;
 }
 
 #login-page button:hover {
     background-color: #0056b3;
-}
+} */
 
 /* Register Page */
-#register-page {
+/* #register-page {
     background-color: #f4f4f9;
     min-height: 100vh;
     padding: 20px 10px;
-}
+} */
 
 #register-page select {
     border: 1px solid #ddd;
@@ -485,3 +490,8 @@ thead th[data-sort]:hover {
 }
 
 
+.logo-big{
+    font-size: 125px;
+    font-family: 'SportingOutline';
+    word-spacing: 12px;
+}

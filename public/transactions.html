@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transactions</title>
+    <script type="module">
+        import { initializeTransactions } from './js/transactions.js';
+        document.addEventListener("DOMContentLoaded", initializeTransactions);
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("navbar.html")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("navbar").innerHTML = data;
+
+                    // Highlight the active link
+                    const currentPage = window.location.pathname.split("/").pop(); // Get the current file name
+                    const links = document.querySelectorAll(".menu a");
+
+                    links.forEach(link => {
+                        if (link.getAttribute("href") === currentPage) {
+                            link.classList.add("active");
+                        }
+                    });
+
+                    // Explicitly initialize the navbar after it's loaded
+                    import('./js/navbar.js').then(({ initializeNavbar }) => {
+                        initializeNavbar();
+                    });
+                });
+        });
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body id="dashboard-page" class="bg-gray-100 min-h-screen">
+    <div id="navbar"></div>
+    <header class="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+        <h1 class="text-2xl font-bold">Transactions</h1>
+    </header>
+    <div class="container mx-auto p-1 pt-10">
+        <div class="search-bar mb-3 flex justify-start items-center">
+            <input type="text" id="searchBar" placeholder="Search transactions..."
+                class="w-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div class="overflow-x-auto mb-6">
+            <table class="table-fixed border-collapse border border-gray-300 bg-white rounded-lg shadow-md">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th data-sort="product_name" class="cursor-pointer">Product</th>
+                        <th data-sort="quantity" class="cursor-pointer">Quantity</th>
+                        <th data-sort="type" class="cursor-pointer">Type</th>
+                        <th class="cursor-pointer">Time</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsTableBody" class="text-gray-700"></tbody>
+            </table>
+
+            <!-- Pagination Controls -->
+            <div class="flex justify-between items-center mt-4">
+                <div>
+                    <label for="rowsPerPage" class="text-sm font-medium text-gray-700">Rows per page:</label>
+                    <select id="rowsPerPage" class="ml-2 px-2 py-1 border border-gray-300 rounded-md shadow-sm">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="prevPage" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"><i
+                            class="fa-solid fa-backward"></i></button>
+                    <span id="pageInfo" class="text-sm font-medium text-gray-700 my-2">Page 1 of 1</span>
+                    <button id="nextPage" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"><i
+                            class="fa-solid fa-forward"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

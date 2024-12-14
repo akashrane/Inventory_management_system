@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,32 +9,48 @@
     <script type="module">
         import { initializeLoginForm } from './js/auth.js';
         document.addEventListener("DOMContentLoaded", initializeLoginForm);
-    </script>    
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
-<body id="login-page" class="flex items-center justify-center h-screen bg-gradient-to-r from-teal-300 to-blue-300">
-    <div class="card bg-white p-6 shadow-lg rounded-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
-        <form id="loginForm" class="space-y-4">
-            <div class="mb-3">
-                <label for="email" class="form-label block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" class="form-control w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" class="form-control w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
 
-            <div class="text-base text-center">
-                Don't have account? <a href="register.html" class="text-blue-500">Register now</a>
+<body id="login-page" class="flex justify-center h-screen bg-gray-100">
+    <div class="w-full flex bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Left Section (Form) -->
+        <div class="w-1/2 px-24 py-20">
+            <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center mt-20">Inventory Management System</h1>
+            <form id="loginForm" class="space-y-4 mt-20">
+                <div class="mb-3">
+                    <label for="email" class="form-label block text-sm font-medium text-gray-700 pb-1">Email</label>
+                    <input type="email" id="email"
+                        class="form-control w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3 pt-3">
+                    <label for="password" class="form-label block text-sm font-medium text-gray-700 pb-1">Password</label>
+                    <input type="password" id="password"
+                        class="form-control w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter your password" required>
+                </div>
+                <div class="mb-3 pt-5">
+                    <button type="submit"
+                        class="btn btn-primary w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
+                </div>
+                <div class="text-center mt-4 pt-5">
+                    <span class="text-base">Don't have an account? <a href="register.html"
+                            class="text-blue-500 font-medium pl-1 hover:text-blue-800">Register now</a></span>
+                </div>
+            </form>
+            <p id="loginMessage" class="text-center mt-4 text-red-500"></p>
+        </div>
+        <!-- Right Section (Logo) -->
+        <div class="w-1/2 bg-gradient-to-r from-blue-500 to-teal-400 flex items-center justify-center">
+            <div class="text-center">
+                <div class="logo-big text-white">I M S</div>
+                <p class="text-white text-lg font-mono">Don't Just Manage, Master Your Inventory</p>
             </div>
-
-        </form>
-        <p id="loginMessage" class="text-center mt-4 text-red-500"></p>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    
 </body>
+
 </html>
