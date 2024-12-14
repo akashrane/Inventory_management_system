@@ -59,7 +59,7 @@ const fetchAndRenderAnalytics = async () => {
 };
 
 // Render product quantities chart
-const renderProductQuantityChart = (products) => {
+/*const renderProductQuantityChart = (products) => {
     const ctx = document.getElementById('productChart').getContext('2d');
     const labels = products.map(product => product.product_name);
     const quantities = products.map(product => product.quantity);
@@ -83,7 +83,62 @@ const renderProductQuantityChart = (products) => {
             },
         },
     });
+}; */
+
+const renderProductQuantityChart = (data) => {
+    const ctx = document.getElementById('productChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(product => product.product_name), // Product names
+            datasets: [{
+                label: 'Product Quantities',
+                data: data.map(product => product.quantity), // Product quantities
+                backgroundColor: data.map(product => {
+                    // Assign colors based on quantity ranges
+                    if (product.quantity < 20) return 'rgba(255, 99, 132, 0.6)'; // Red for low quantity
+                    if (product.quantity < 50) return 'rgba(255, 205, 86, 0.6)'; // Yellow for medium quantity
+                    if (product.quantity < 80) return 'rgba(75, 192, 192, 0.6)'; // Green for high quantity
+                    return 'rgba(54, 162, 235, 0.6)'; // Blue for very high quantity
+                }),
+                borderColor: data.map(product => {
+                    // Assign corresponding border colors for better visualization
+                    if (product.quantity < 20) return 'rgba(255, 99, 132, 1)';
+                    if (product.quantity < 50) return 'rgba(255, 205, 86, 1)';
+                    if (product.quantity < 80) return 'rgba(75, 192, 192, 1)';
+                    return 'rgba(54, 162, 235, 1)';
+                }),
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'top' },
+                datalabels: {
+                    anchor: 'end', // Position the label at the end of the bar
+                    align: 'top', // Align the label to the top of the bar
+                    color: '#000', // Label text color
+                    font: {
+                        size: 12, // Label font size
+                    },
+                    formatter: (value) => value, // Display the value as is
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 10, // Adjust the step size as needed
+                    },
+                },
+            },
+        },
+        plugins: [ChartDataLabels], // Enable the Data Labels plugin
+    });
 };
+
 
 const fetchTopSellingProducts = async () => {
     try {
@@ -197,20 +252,35 @@ const renderStockDistributionChart = (data) => {
                 label: 'Stock Distribution',
                 data: quantities,
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(255, 206, 86, 0.6)',
-                    'rgba(75, 192, 192, 0.6)',
-                    'rgba(153, 102, 255, 0.6)',
-                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',   // Red
+                    'rgba(54, 162, 235, 0.6)',   // Blue
+                    'rgba(255, 206, 86, 0.6)',   // Yellow
+                    'rgba(75, 192, 192, 0.6)',   // Teal
+                    'rgba(153, 102, 255, 0.6)',  // Purple
+                    'rgba(255, 159, 64, 0.6)',   // Orange
+                    'rgba(201, 203, 207, 0.6)',  // Grey
+                    'rgba(105, 135, 245, 0.6)',  // Light Blue
+                    'rgba(255, 99, 71, 0.6)',    // Tomato
+                    'rgba(123, 239, 178, 0.6)',  // Mint
+                    'rgba(220, 120, 220, 0.6)',  // Pink
+                    'rgba(72, 201, 176, 0.6)',   // Aquamarine
+                    'rgba(240, 128, 128, 0.6)',  // Light Coral
                 ],
+                
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',     // Red
+                    'rgba(54, 162, 235, 1)',     // Blue
+                    'rgba(255, 206, 86, 1)',     // Yellow
+                    'rgba(75, 192, 192, 1)',     // Teal
+                    'rgba(153, 102, 255, 1)',    // Purple
+                    'rgba(255, 159, 64, 1)',     // Orange
+                    'rgba(201, 203, 207, 1)',    // Grey
+                    'rgba(105, 135, 245, 1)',    // Light Blue
+                    'rgba(255, 99, 71, 1)',      // Tomato
+                    'rgba(123, 239, 178, 1)',    // Mint
+                    'rgba(220, 120, 220, 1)',    // Pink
+                    'rgba(72, 201, 176, 1)',     // Aquamarine
+                    'rgba(240, 128, 128, 1)',    // Light Coral
                 ],
                 borderWidth: 1,
             }],
